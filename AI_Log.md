@@ -56,6 +56,10 @@ Date: 24.09.2026
 Purpose: Constructing a favicon fitting the name and purspose of the website
 Outcome: NOVI favicon in black and gold
 
-Date: 24.09.2026
+Date: 27.09.2026
 Purpose: Github pages crashes on launch
 Outcome: Needed to configure the vite.config.ts, had not changes this since we played around with testpages in the modules
+
+Date: 27.09.2026
+Purpose: Github still crashing.
+Outcome: I forgot I needed to use Github Actions and not pages when working with Vite. Had to make a deploy file.

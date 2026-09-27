@@ -7,9 +7,18 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
 import CheckoutSuccessPage from './pages/CheckoutSuccessPage';
 import NotFoundPage from './pages/NotFoundPage';
+import { ErrorMessage } from './components/StatusMessage';
 
 const rootRoute = new RootRoute({
   component: App,
+  // Fallback if a page crashes while rendering
+  errorComponent: ({ reset }) => (
+    <ErrorMessage
+      message="An unexpected error occurred on this page."
+      onRetry={reset}
+      showHomeLink
+    />
+  ),
 });
 
 const contactRoute = new Route({

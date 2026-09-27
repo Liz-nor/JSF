@@ -5,6 +5,18 @@
   --font-cursive: 'Brush Script MT', 'Segoe Script', cursive;
   --font-manrope: 'manrope', sans-serif;
   --font-playfair: 'Playfair Display', monospace;
+  --animate-toast-in: toast-in 0.2s ease-out;
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 :root {

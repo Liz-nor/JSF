@@ -1,38 +1,60 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
 import type { Product } from '../api/products';
-import { fetchProduct, fetchProducts } from '../api/products';
+import {
+  ApiError,
+  fetchProduct,
+  fetchProducts,
+  getErrorMessage,
+  isAbortError,
+} from '../api/products';
+import { ErrorMessage, LoadingSpinner } from '../components/StatusMessage';
 import { useCartStore } from '../store/CartStore';
+import { useToastStore } from '../store/ToastStore';
 
 function ProductDetailPage() {
   const { productId } = useParams({ strict: false });
   const [product, setProduct] = useState<Product | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isNotFound, setIsNotFound] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const addItem = useCartStore((state) => state.addItem);
+  const showToast = useToastStore((state) => state.showToast);
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const [justAdded, setJustAdded] = useState(false);
 
   useEffect(() => {
     if (!productId) return;
 
+    // Abort the previous request if the user navigates to another product
+    const controller = new AbortController();
+
     const loadProduct = async () => {
       setIsLoading(true);
       setError(null);
+      setIsNotFound(false);
+      setProduct(null);
+      setSimilarProducts([]);
       try {
-        setProduct(await fetchProduct(productId));
+        setProduct(await fetchProduct(productId, controller.signal));
       } catch (err) {
-        if (err instanceof Error) {
-          setError(`Im sorry, there was an error: ${err.message}`);
+        if (isAbortError(err)) return;
+        if (err instanceof ApiError && err.status === 404) {
+          setIsNotFound(true);
+        } else {
+          setError(getErrorMessage(err));
         }
         console.error('Failed to fetch product:', err);
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     };
 
     void loadProduct();
-  }, [productId]);
+
+    return () => controller.abort();
+  }, [productId, retryCount]);
 
   useEffect(() => {
     if (!justAdded) return;
@@ -43,31 +65,55 @@ function ProductDetailPage() {
   useEffect(() => {
     if (!product) return;
 
+    const controller = new AbortController();
+
     const getSimilarProducts = async () => {
-      const products = await fetchProducts();
+      try {
+        const products = await fetchProducts(controller.signal);
 
-      const similar = products.filter(
-        (item: Product) =>
-          item.id !== product.id &&
-          item.tags.some((tag) => product.tags.includes(tag)),
-      );
+        const similar = products.filter(
+          (item: Product) =>
+            item.id !== product.id &&
+            item.tags.some((tag) => product.tags.includes(tag)),
+        );
 
-      setSimilarProducts(similar);
+        setSimilarProducts(similar);
+      } catch (err) {
+        // Optional section: if it fails, just hide it instead of breaking the page
+        if (!isAbortError(err)) {
+          console.error('Failed to fetch similar products:', err);
+        }
+      }
     };
 
-    getSimilarProducts();
+    void getSimilarProducts();
+
+    return () => controller.abort();
   }, [product]);
 
-  if (isLoading) {
-    return <p className="text-center py-8 text-gray-500">Loading product...</p>;
+  if (productId && isLoading) {
+    return <LoadingSpinner label="Loading product..." />;
   }
 
-  if (error) {
-    return <p className="text-center py-8 text-red-600">{error}</p>;
+  if (!productId || isNotFound) {
+    return (
+      <ErrorMessage
+        title="Product not found"
+        message="This product may have been removed or the link is incorrect."
+        showHomeLink
+      />
+    );
   }
 
-  if (!product) {
-    return <p className="text-center py-8 text-gray-500">Product not found.</p>;
+  if (error || !product) {
+    return (
+      <ErrorMessage
+        title="Could not load product"
+        message={error ?? 'Something unexpected went wrong. Please try again.'}
+        onRetry={() => setRetryCount((count) => count + 1)}
+        showHomeLink
+      />
+    );
   }
 
   const hasDiscount = product.discountedPrice < product.price;
@@ -150,13 +196,11 @@ function ProductDetailPage() {
                 image: product.image,
               });
               setJustAdded(true);
+              showToast(`${product.title} added to cart`);
             }}
           >
             {justAdded ? 'Added to cart ✓' : 'Add to Cart'}
           </button>
-          <span className="sr-only" aria-live="polite">
-            {justAdded ? `${product.title} added to cart` : ''}
-          </span>
         </div>
       </article>
 

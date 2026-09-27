@@ -4,8 +4,15 @@ import Pagination from '../components/Pagination';
 import TagsFilter from '../components/TagsFilter';
 import SearchBar from '../components/SearchBar';
 import { Heart, ShoppingCart } from 'lucide-react';
-import { fetchProducts, type Product } from '../api/products';
+import {
+  fetchProducts,
+  getErrorMessage,
+  isAbortError,
+  type Product,
+} from '../api/products';
+import { ErrorMessage, LoadingSpinner } from '../components/StatusMessage';
 import { useCartStore } from '../store/CartStore';
+import { useToastStore } from '../store/ToastStore';
 import { Fragment } from 'react';
 import { banner } from './Banners';
 
@@ -19,34 +26,37 @@ const getDiscountPercent = (product: Product) =>
 
 export function Products() {
   const addItem = useCartStore((state) => state.addItem);
+  const showToast = useToastStore((state) => state.showToast);
   const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // Start in loading state so "No products" never flashes before the first fetch
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedTag, setSelectedTag] = useState('All');
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const products = await fetchProducts();
-
-      setProducts(products);
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      }
-
-      console.error('Failed to fetch products:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    const controller = new AbortController();
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        setProducts(await fetchProducts(controller.signal));
+      } catch (err) {
+        if (isAbortError(err)) return;
+        setError(getErrorMessage(err));
+        console.error('Failed to fetch products:', err);
+      } finally {
+        if (!controller.signal.aborted) setIsLoading(false);
+      }
+    };
+
+    void fetchData();
+
+    return () => controller.abort();
+  }, [retryCount]);
 
   const tags = useMemo(
     () => ['All', ...new Set(products.flatMap((product) => product.tags))],
@@ -71,11 +81,17 @@ export function Products() {
   };
 
   if (isLoading) {
-    return <p className="text-center py-8 text-gray-500">Loading...</p>;
+    return <LoadingSpinner label="Loading products..." />;
   }
 
   if (error) {
-    return <p className="text-center py-8 text-red-600">Error: {error}</p>;
+    return (
+      <ErrorMessage
+        title="Could not load products"
+        message={error}
+        onRetry={() => setRetryCount((count) => count + 1)}
+      />
+    );
   }
 
   return (
@@ -169,14 +185,15 @@ export function Products() {
                     </button>
                     <button
                       type="button"
-                      onClick={() =>
+                      onClick={() => {
                         addItem({
                           id: product.id,
                           title: product.title,
                           price: product.discountedPrice,
                           image: product.image,
-                        })
-                      }
+                        });
+                        showToast(`${product.title} added to cart`);
+                      }}
                       className="bg-white rounded-full p-1.5 shadow-md cursor-pointer transition duration-300 hover:scale-110"
                       aria-label={`Add ${product.title} to cart`}
                     >
@@ -219,7 +236,11 @@ export function Products() {
           })}
         </ul>
       ) : (
-        <p className="text-center py-8 text-gray-500">No products available.</p>
+        <p className="text-center py-8 text-gray-500">
+          {products.length === 0
+            ? 'No products available right now.'
+            : 'No products match your search or filter.'}
+        </p>
       )}
       <Pagination
         currentPage={currentPage}

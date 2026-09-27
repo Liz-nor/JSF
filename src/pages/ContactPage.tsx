@@ -76,14 +76,14 @@ function ContactPage() {
   };
 
   const fieldClass = (field: keyof ContactFormValues) =>
-    `border w-full p-2 text-white ${errors[field] ? 'border-red-500' : ''}`;
+    `border border-lg w-full p-2 text-white ${errors[field] ? 'border-red-500' : ''}`;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <h2>Contact Us</h2>
-      <p>Get in touch with us here.</p>
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h2 className="text-2xl font-bold mb-2">Contact Us</h2>
+      <p className="mb-4">Get in touch with us here.</p>
       <form
-        className="flex flex-col border w-full max-w-md gap-4 p-4 bg-gray-800 text-white"
+        className="flex flex-col border rounded-lg w-full max-w-md gap-4 p-4 bg-gray-800 text-white"
         onSubmit={handleSubmit}
         noValidate
       >

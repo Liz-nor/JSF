@@ -1,9 +1,19 @@
 import { useCartStore } from '../store/CartStore';
+import { useNavigate } from '@tanstack/react-router';
+import type { SubmitEvent } from 'react';
 
 function CartDisplay() {
   const items = useCartStore((state) => state.cartItems);
   const removeItem = useCartStore((state) => state.removeFromCart);
   const updateQuantity = useCartStore((state) => state.updateItemQuantity);
+  const clearCart = useCartStore((state) => state.clearCart);
+  const navigate = useNavigate();
+
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    clearCart();
+    navigate({ to: '/checkoutSuccess' });
+  };
 
   if (items.length === 0) {
     return (
@@ -12,7 +22,7 @@ function CartDisplay() {
         <button
           type="button"
           className="mt-2 w-full bg-black text-white px-8 py-3 rounded-lg font-semibold transition hover:bg-gray-800 cursor-pointer"
-          onClick={() => (window.location.href = '/')}
+          onClick={() => navigate({ to: '/' })}
         >
           Continue Shopping
         </button>
@@ -21,8 +31,8 @@ function CartDisplay() {
   }
 
   return (
-    <div className="flex flex-table justify-between m-0">
-      <section className="flex flex-col gap-3 m-0">
+    <div className="flex flex-col md:flex-row grow-1 justify-between gap-6 mt-4">
+      <section className="flex flex-col gap-3 m-0 w-full md:flex-1">
         <ul className="flex flex-col gap-3 m-0">
           {items.map((item) => (
             <li
@@ -84,13 +94,16 @@ function CartDisplay() {
           ))}
         </ul>
       </section>
-      <form className="flex flex-col border rounded-lg w-full max-w-md gap-4 p-4 bg-white text-white">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col border rounded-lg w-full md:max-w-md gap-4 p-4 bg-white text-white"
+      >
         <h2 className="text-lg font-medium text-gray-700 p-2">
           Payment Information
         </h2>
         <label
           htmlFor="nameOnCard"
-          className="block text-sm border-white font-medium text-gray-700 p-2"
+          className="block text-sm border-gray-300 font-medium text-gray-700 p-2"
         >
           Name on Card
         </label>
@@ -98,12 +111,12 @@ function CartDisplay() {
           type="text"
           id="nameOnCard"
           name="nameOnCard"
-          className="mt-1 block w-full rounded-md border-white shadow-sm sm:text-sm"
+          className="mt-1 block w-full rounded-md border border-black text-black "
         />
 
         <label
           htmlFor="cardNumber"
-          className="block text-sm border-white font-medium text-gray-700 p-2"
+          className="block text-sm font-medium text-gray-700 p-2"
         >
           Card Number
         </label>
@@ -111,9 +124,9 @@ function CartDisplay() {
           type="text"
           id="cardNumber"
           name="cardNumber"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"
+          className="mt-1 block w-full rounded-md border border-black text-black"
         />
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-col gap-2">
           <label
             htmlFor="expirationDate"
             className="block text-sm font-medium text-gray-700 p-2"
@@ -124,21 +137,10 @@ function CartDisplay() {
             type="text"
             id="expirationDate"
             name="expirationDate"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"
+            className="mt-1 block w-full rounded-md border border-black text-black"
           />
-          <label
-            htmlFor="expirationDate"
-            className="block text-sm font-medium text-gray-700 p-2"
-          >
-            Expiration Date
-          </label>
-          <input
-            type="text"
-            id="expirationDate"
-            name="expirationDate"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"
-          />
-
+        </div>
+        <div className="flex flex-col gap-2">
           <label
             htmlFor="cvv"
             className="block text-sm font-medium text-gray-700 p-2"
@@ -149,7 +151,7 @@ function CartDisplay() {
             type="text"
             id="cvv"
             name="cvv"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"
+            className="mt-1 block w-full rounded-md border border-black text-black"
           />
         </div>
         <div className="flex-grow">
