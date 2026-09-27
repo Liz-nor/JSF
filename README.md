@@ -5,7 +5,7 @@
 ![Tailwind](https://img.shields.io/badge/Tailwind-purple)
 ![JavaScript](https://img.shields.io/badge/JavaScript-yellow)
 
-## In this project I have used TypeScript, React and Tailwind to make an online shop providing products for sale.
+In this project I have used TypeScript, React and Tailwind to make an online shop providing products for sale.
 
 ## Features
 
@@ -24,12 +24,18 @@
 Follow these steps to install locally:
 
 1. Clone repository:
+
    `git clone https://github.com/Liz-nor/JSF.git`
 
 2. Open the repository:
+
    `cd JSF`
 
-3. Use `npm run dev` in terminal and follow the link.
+3. Use
+
+`npm run dev`
+
+in terminal and follow the link.
 
 ---
 
