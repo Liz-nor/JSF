@@ -3,7 +3,6 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-blue)
 ![React](https://img.shields.io/badge/React-blue)
 ![Tailwind](https://img.shields.io/badge/Tailwind-purple)
-![JavaScript](https://img.shields.io/badge/JavaScript-yellow)
 
 In this project I have used TypeScript, React and Tailwind to make an online shop providing products for sale.
 
