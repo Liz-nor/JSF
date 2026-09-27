@@ -1,3 +1,4 @@
+import { ShoppingCart } from 'lucide-react';
 import { useCartStore } from '../store/CartStore';
 import { Link } from '@tanstack/react-router';
 
@@ -13,8 +14,13 @@ function Header() {
           Find something you love!
         </p>
       </div>
-      <Link to="/cart" activeProps={{ className: 'active-link' }}>
-        Cart ({cartCount})
+      <Link to="/cart">
+        <div className="relative inline-flex">
+          <ShoppingCart className="w-5 h-5" />
+          <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-black text-xs text-white">
+            {cartCount}
+          </span>
+        </div>
       </Link>
     </header>
   );

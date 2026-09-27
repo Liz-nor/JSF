@@ -1,11 +1,12 @@
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
-import { RootRoute, Route, Router } from '@tanstack/react-router';
+import { RootRoute, Route } from '@tanstack/react-router';
 import App from './App';
 import ContactPage from './pages/ContactPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
 import CheckoutSuccessPage from './pages/CheckoutSuccessPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 const rootRoute = new RootRoute({
   component: App,
@@ -54,8 +55,9 @@ export const routeTree = rootRoute.addChildren([
   productDetailRoute,
   cartRoute,
   checkoutSuccessRoute,
+  new Route({
+    getParentRoute: () => rootRoute,
+    path: '*',
+    component: NotFoundPage,
+  }),
 ]);
-
-export const router = new Router({
-  routeTree,
-});

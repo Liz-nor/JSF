@@ -116,7 +116,7 @@ export function Products() {
                       alt={product.image.alt || product.title}
                     />
                     <div className="flex flex-col gap-1 p-2 flex-1">
-                      <h3 className="font-bold text-sm line-clamp-1">
+                      <h3 className="font-bold text-xl text-sm line-clamp-1">
                         {product.title}
                       </h3>
                       <p className="text-xs text-gray-600 line-clamp-1">

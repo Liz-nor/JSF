@@ -14,7 +14,7 @@ function TagsFilter({ tags, selectedTag, onTagChange }: TagsFilterProps) {
   return (
     <div>
       <select
-        className="border p-2 rounded m-2"
+        className="border p-2 rounded mb-2"
         value={selectedTag}
         onChange={handleTagChange}
       >

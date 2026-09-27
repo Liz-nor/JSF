@@ -3,9 +3,9 @@ import { Link } from '@tanstack/react-router';
 function NotFoundPage() {
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>404 - Side Ikke Funnet</h1>
-      <p>Beklager, vi fant ikke siden du lette etter.</p>
-      <Link to="/">Tilbake til Hjemmesiden</Link>
+      <h1>404 - Page not found</h1>
+      <p>Sorry, we couldn't find the page you were looking for.</p>
+      <Link to="/">Back to Home</Link>
     </div>
   );
 }
