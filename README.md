@@ -39,10 +39,8 @@ in terminal and follow the link.
 
 ---
 
-## Licence
+### MIT Licence
 
-## MIT Licence
-
-## Contact
+### Contact
 
 Lise Ervik - [LinkedIn] (https://www.linkedin.com/in/lise-ervik-9b688b237/)
