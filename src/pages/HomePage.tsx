@@ -1,7 +1,10 @@
+import Products from './Products';
+
 function HomePage() {
   return (
     <div>
-      <h1>Hjem</h1>
+      <h1>Products</h1>
+      <Products />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { routeTree } from './router';
+import '@fontsource/manrope';
 import './index.css';
 
 const rootElement = document.getElementById('root');

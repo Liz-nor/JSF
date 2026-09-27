@@ -1,27 +1,22 @@
-import type { ChangeEvent } from 'react';
+import { useState } from 'react';
 
-interface TagsFilterProps {
-  tags: string[];
-  selectedTag: string;
-  onTagChange: (tag: string) => void;
+interface SearchBarProps {
+  onSearch: (query: string) => void;
 }
-
-function TagsFilter({ tags, selectedTag, onTagChange }: TagsFilterProps) {
-  const handleTagChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    onTagChange(event.target.value);
-  };
+function SearchBar({ onSearch }: SearchBarProps) {
+  const [searchTerm, setSearchTerm] = useState('');
 
   return (
-    <div>
-      <select value={selectedTag} onChange={handleTagChange}>
-        {tags.map((tag) => (
-          <option key={tag} value={tag}>
-            {tag}
-          </option>
-        ))}
-      </select>
-    </div>
+    <input
+      className="border rounded-lg p-2 w-full"
+      type="text"
+      value={searchTerm}
+      onChange={(e) => {
+        setSearchTerm(e.target.value);
+        onSearch(e.target.value);
+      }}
+      placeholder="Search products..."
+    />
   );
 }
-
-export default TagsFilter;
+export default SearchBar;

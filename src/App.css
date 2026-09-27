@@ -6,37 +6,26 @@
   text-decoration: none;
 }
 
-ul,
-li,
-a {
-  list-style-type: none;
-  text-decoration: none;
-  display: inline-block;
-  margin-right: 10px;
+@layer base {
+  ul,
+  li,
+  a {
+    list-style-type: none;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 10px;
+  }
 }
 
-.originalPrice {
-  text-decoration: line-through;
-  color: red;
-  margin-right: 10px;
+.hamburger {
+  display: none;
 }
 
-.product-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  padding: 0;
-  margin: 0;
-}
-
-.product-item {
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  color: #333;
-}
-.product-item:hover {
-  background-color: #e0e0e0;
-  transition: 0.3s ease;
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+    padding: 10px;
+    margin-left: 10px;
+    z-index: 10;
+  }
 }
