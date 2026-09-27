@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Modal } from '../components/Modal';
+import { useNavigate } from '@tanstack/react-router';
 
 function CheckoutSuccessPage() {
   const [isOpen, setIsOpen] = useState(true);
@@ -12,7 +13,8 @@ function CheckoutSuccessPage() {
     }, 2000);
     return () => clearTimeout(timer);
   }, [isOpen]);
-
+const navigate = useNavigate();
+  
   return (
     <div>
       <h1> Order Successful!</h1>
@@ -20,7 +22,7 @@ function CheckoutSuccessPage() {
       <button
         type="button"
         className="mt-2 w-full bg-black text-white px-8 py-3 rounded-lg font-semibold transition hover:bg-gray-800 cursor-pointer"
-        onClick={() => (window.location.href = '/')}
+        onClick={() => navigate({ to: '/' })}
       >
         Continue Shopping
       </button>
