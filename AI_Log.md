@@ -18,7 +18,7 @@ Outcome: Checked relationship between currentProducts, filtering, pagination and
 
 Date: 15.09.2026
 Purpose: Fix HTML/React warning
-Outcome: Identified an <li> nested inside another <li> in the navbar and corrected the HTML structure.
+Outcome: Identified an li nested inside another in the navbar and corrected the HTML structure.
 
 Date: 17.09.2026
 Purpose: Splitting the fetch from the display of products
@@ -53,9 +53,9 @@ Purpose: Find a font complementing Manrope
 Outcome: Compared suitable font pairings and identified options such as Playfair Display DM Serif Display and more. Landed on Playfair in the end for headings
 
 Date: 24.09.2026
-Purpose:
-Outcome:
+Purpose: Constructing a favicon fitting the name and purspose of the website
+Outcome: NOVI favicon in black and gold
 
 Date: 24.09.2026
-Purpose:
-Outcome:
+Purpose: Github pages crashes on launch
+Outcome: Needed to configure the vite.config.ts, had not changes this since we played around with testpages in the modules
