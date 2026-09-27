@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import Pagination from '../components/Pagination';
 import TagsFilter from '../components/TagsFilter';
-import SearchBar from '../components/Searchbar';
+import SearchBar from '../components/SearchBar';
 import { Heart, ShoppingCart } from 'lucide-react';
 import { fetchProducts, type Product } from '../api/products';
 import { useCartStore } from '../store/CartStore';
